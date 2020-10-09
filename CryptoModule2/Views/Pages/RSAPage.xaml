@@ -206,7 +206,7 @@
                     </Grid>
 
                     <Button Content="Зашифровать" Margin="0,30,0,10" Command="{Binding EncryptCommand}"/>
-                    <CheckBox IsChecked="{Binding IsHEX}" Content="Отобразить в HEX" HorizontalAlignment="Center"/>
+                    <CheckBox Visibility="Hidden" IsChecked="{Binding IsHEX}" Content="Отобразить в HEX" HorizontalAlignment="Center"/>
                     <Button Content="Расшифровать" Margin="0,10,0,10" Command="{Binding DecryptCommand}"/>
                 </StackPanel>
             </Grid>

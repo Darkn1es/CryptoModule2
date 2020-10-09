@@ -92,6 +92,7 @@
     <Compile Include="Models\BigIntegerExtension.cs" />
     <Compile Include="Models\Ciphers\IFileCipher.cs" />
     <Compile Include="Models\Ciphers\Keys\AsymmetricCipherKeyPair.cs" />
+    <Compile Include="Models\Helper.cs" />
     <Compile Include="ViewModels\ICipherVM.cs" />
     <Compile Include="ViewModels\RSApageVM.cs" />
     <Compile Include="Views\Converters\InverseBooleanConverter.cs" />

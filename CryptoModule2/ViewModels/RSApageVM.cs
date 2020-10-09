@@ -135,26 +135,14 @@ namespace CryptoModule2.ViewModels
 
         #region Buttons handlers
 
-        public DelegateCommand GenerateCommand { get; } = new DelegateCommand( () =>
-         {
-
-         } );
+        public DelegateCommand GenerateCommand { get; }
 
 
-        public DelegateCommand ConvertKeyCommand { get; } = new DelegateCommand( () =>
-         {
+        public DelegateCommand ConvertKeyCommand { get; }
 
-         } );
+        public DelegateCommand EncryptCommand { get; }
 
-        public DelegateCommand EncryptCommand { get; } = new DelegateCommand( () =>
-         {
-
-         } );
-
-        public DelegateCommand DecryptCommand { get; } = new DelegateCommand( () =>
-         {
-
-         } );
+        public DelegateCommand DecryptCommand { get; }
 
         public DelegateCommand EncryptFileCommand { get; }
 
@@ -239,7 +227,109 @@ namespace CryptoModule2.ViewModels
 
             } );
 
+            GenerateCommand = new DelegateCommand( () =>
+            {
+                try
+                {
+                    BigInteger p;
+                    BigInteger q;
 
+                    AsymmetricCipherKeyPair keyPair = RSAKey.GenerateKey( 60, out p, out q );
+
+                    RSAKey publicKey = keyPair.PublicKey as RSAKey;
+                    PublicExponent = publicKey.Exponent.ToString();
+
+                    RSAKey privateKey = keyPair.PrivateKey as RSAKey;
+                    PrivateExponent = privateKey.Exponent.ToString();
+
+                    Modulus = publicKey.Modulus.ToString();
+                    P = p.ToString();
+                    Q = q.ToString();
+
+                }
+                catch( Exception ex )
+                {
+                    MessageBox.Show( ex.Message );
+                }
+            } );
+
+            ConvertKeyCommand = new DelegateCommand( () =>
+            {
+                BigInteger p;
+                BigInteger q;
+                if( !BigInteger.TryParse(P, out p) )
+                {
+                    MessageBox.Show( "Введите корректное значения P" );
+                    return;
+                }
+                if( !BigInteger.TryParse( Q, out q ) )
+                {
+                    MessageBox.Show( "Введите корректное значения Q" );
+                    return;
+                }
+
+                try
+                {
+                    AsymmetricCipherKeyPair keyPair = RSAKey.GenerateKey( p, q );
+
+                    RSAKey publicKey = keyPair.PublicKey as RSAKey;
+                    PublicExponent = publicKey.Exponent.ToString();
+
+                    RSAKey privateKey = keyPair.PrivateKey as RSAKey;
+                    PrivateExponent = privateKey.Exponent.ToString();
+
+                    Modulus = publicKey.Modulus.ToString();
+
+                }
+                catch( Exception ex )
+                {
+                    MessageBox.Show( ex.Message );
+                }
+            } );
+
+            EncryptCommand = new DelegateCommand( () =>
+            {
+                if( string.IsNullOrEmpty( InputText ) )
+                {
+                    MessageBox.Show( "Введите текст" );
+                }
+
+                try
+                {
+                    RSAKey key = GetPublicKey();
+                    byte[] result = _rsa.Encrypt( Encoding.Default.GetBytes( InputText ), key );
+                    OutputText = Encoding.Default.GetString( result );
+                }
+                catch( Exception ex)
+                {
+
+                    MessageBox.Show( ex.Message );
+                }
+
+            } );
+
+            DecryptCommand = new DelegateCommand( () =>
+            {
+                if( string.IsNullOrEmpty( InputText ) )
+                {
+                    MessageBox.Show( "Введите текст" );
+                }
+
+                try
+                {
+                    RSAKey key = GetPrivateKey();
+                    byte[] result = _rsa.Decrypt( Encoding.Default.GetBytes( InputText ), key );
+                    OutputText = Encoding.Default.GetString( result );
+                }
+                catch( Exception ex)
+                {
+
+                    MessageBox.Show( ex.Message );
+                }
+
+
+
+            } );
 
             #endregion
         }

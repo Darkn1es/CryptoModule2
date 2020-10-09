@@ -1,6 +1,7 @@
 ﻿using CryptoModule2.Models.Ciphers.Keys;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Numerics;
 
@@ -20,7 +21,7 @@ namespace CryptoModule2.Models.Ciphers.Asymmetric
                 throw new ArgumentException( "Ключ должен быть приватным" );
             }
 
-            return ProcessRSA( ciphertext, rsaKey, false );
+            return ProcessRSA( ciphertext, rsaKey );
 
         }
 
@@ -46,8 +47,9 @@ namespace CryptoModule2.Models.Ciphers.Asymmetric
                 outputChunk = Decrypt( inputChunk, rsaKey );
                 outstream.Write( outputChunk, 0, outputChunk.Length );
 
-                double percent = ( double )instream.Position / fileSize;
-                ProgressChanged?.Invoke( percent );
+                long percent = ( instream.Position * 100 ) / fileSize;
+
+                ProgressChanged?.Invoke( (int)percent );
             }
         }
 
@@ -60,7 +62,7 @@ namespace CryptoModule2.Models.Ciphers.Asymmetric
                 throw new ArgumentException( "Ключ должен быть публичным" );
             }
 
-            return ProcessRSA( text, rsaKey, true );
+            return ProcessRSA( text, rsaKey );
 
         }
 
@@ -78,20 +80,20 @@ namespace CryptoModule2.Models.Ciphers.Asymmetric
 
             long fileSize = instream.Length;
 
-            byte[] inputChunk = new byte[ rsaKey.MaxOpenTextSize ];
+            byte[] inputChunk = new byte[ rsaKey.MaxOpenTextSize * 1024 * 1024 * 4];
             byte[] outputChunk = new byte[ rsaKey.MaxCipherTextSize ];
 
-            while( instream.Read( inputChunk, 0, rsaKey.MaxOpenTextSize ) != 0 )
+            while( instream.Read( inputChunk, 0, rsaKey.MaxOpenTextSize * 1024 * 1024 * 4 ) != 0 )
             {
                 outputChunk = Encrypt( inputChunk, rsaKey );
                 outstream.Write( outputChunk, 0, outputChunk.Length );
 
-                double percent = ( double )instream.Position / fileSize;
-                ProgressChanged?.Invoke( percent );
+                long percent = (instream.Position * 100) / fileSize;
+                ProgressChanged?.Invoke( (int)percent );
             }
         }
 
-        private byte[] ProcessRSA( byte[] inputBlock, RSAKey rsaKey, bool needPadding = true )
+        private byte[] ProcessRSA( byte[] inputBlock, RSAKey rsaKey)
         {
             List<byte> result = new List<byte>( inputBlock.Length );
 
@@ -107,27 +109,61 @@ namespace CryptoModule2.Models.Ciphers.Asymmetric
                 readSize = rsaKey.MaxOpenTextSize;
                 writeSize = rsaKey.MaxCipherTextSize;
             }
-
-
-
-            for( int currentByte = 0; currentByte < inputBlock.Length; currentByte += readSize )
+            long time = 0;
+            try
             {
-                int byteCopyCount = Math.Min( readSize, inputBlock.Length - currentByte );
+                for( int currentByte = 0; currentByte < inputBlock.Length; currentByte += readSize )
+                {
+                    time = 0;
+                    Debug.WriteLine( "Block" );
+                    var watch = Stopwatch.StartNew();
+                    int byteCopyCount = Math.Min( readSize, inputBlock.Length - currentByte );
 
-                byte[] currentBlock = new byte[ byteCopyCount + 1 ]; // Добавлен 0х00 чтобы число было положительным 
-                Buffer.BlockCopy( inputBlock, currentByte, currentBlock, 0, byteCopyCount );
+                    time = watch.ElapsedTicks;
+                    Debug.WriteLine( $"1 - {watch.ElapsedTicks}" );
 
-                BigInteger openInt = new BigInteger( currentBlock );
-                BigInteger cipherInt = BigInteger.ModPow( openInt, rsaKey.Exponent, rsaKey.Modulus );
-                byte[] cipherBlock = cipherInt.ToByteArray( false );
+                    byte[] currentBlock = new byte[ byteCopyCount + 1 ]; // Добавлен 0х00 чтобы число было положительным 
+                    
+                    Debug.WriteLine( $"2 - {watch.ElapsedTicks - time}" );
+                    time = watch.ElapsedTicks;
+
+                    Buffer.BlockCopy( inputBlock, currentByte, currentBlock, 0, byteCopyCount );
+
+                    Debug.WriteLine( $"3 - {watch.ElapsedTicks - time}" );
+                    time = watch.ElapsedTicks;
+
+                    BigInteger openInt = new BigInteger( currentBlock );
+                    BigInteger cipherInt = BigInteger.ModPow( openInt, rsaKey.Exponent, rsaKey.Modulus );
+                    Debug.WriteLine( $"4 - {watch.ElapsedTicks - time}" );
+                    time = watch.ElapsedTicks;
+
+                    byte[] cipherBlock = cipherInt.ToByteArray( false );
+                    Debug.WriteLine( $"5 - {watch.ElapsedTicks - time}" );
+                    time = watch.ElapsedTicks;
+
+                    byte[] packedBlock = new byte[ writeSize ];
+                    Debug.WriteLine( $"6 - {watch.ElapsedTicks - time}" );
+                    time = watch.ElapsedTicks;
+                    Buffer.BlockCopy( cipherBlock, 0, packedBlock, 0, cipherBlock.Length );
+                    Debug.WriteLine( $"7 - {watch.ElapsedTicks - time}" );
+                    time = watch.ElapsedTicks;
+
+                    result.AddRange( packedBlock );
+                    Debug.WriteLine( $"8 - {watch.ElapsedTicks - time}" );
+                    time = watch.ElapsedTicks;
+                    watch.Stop();
+                    Debug.WriteLine( "END" );
 
 
-                byte[] packedBlock = new byte[ writeSize ];
-                Buffer.BlockCopy( cipherBlock, 0, packedBlock, 0, cipherBlock.Length );
-
-                result.AddRange( packedBlock );
-
+                }
             }
+            catch( Exception ex)
+            {
+
+                throw new Exception( "Ошибка! Проверьте входные параметры.", ex );
+            }
+
+
 
             return result.ToArray();
         }
