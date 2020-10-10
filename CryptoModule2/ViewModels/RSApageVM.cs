@@ -29,9 +29,9 @@ namespace CryptoModule2.ViewModels
         private string _p = "";
         private string _q = "";
 
-        private string _modulus = "448823";
-        private string _publicExponent = "305269";
-        private string _privateExponent = "224077";
+        private string _modulus = "";
+        private string _publicExponent = "";
+        private string _privateExponent = "";
 
         private bool _isDoingCipher = false;
 
@@ -186,7 +186,7 @@ namespace CryptoModule2.ViewModels
                 }
                 catch( Exception ex )
                 {
-                    MessageBox.Show( ex.Message );
+                    MessageBox.Show( "Ошибка! Проверьте входные параметры" );
                 }
 
             } );
@@ -222,7 +222,7 @@ namespace CryptoModule2.ViewModels
                 }
                 catch( Exception ex )
                 {
-                    MessageBox.Show( ex.Message );
+                    MessageBox.Show( "Ошибка! Проверьте входные параметры" );
                 }
 
             } );
@@ -292,6 +292,7 @@ namespace CryptoModule2.ViewModels
                 if( string.IsNullOrEmpty( InputText ) )
                 {
                     MessageBox.Show( "Введите текст" );
+                    return;
                 }
 
                 try
@@ -313,6 +314,7 @@ namespace CryptoModule2.ViewModels
                 if( string.IsNullOrEmpty( InputText ) )
                 {
                     MessageBox.Show( "Введите текст" );
+                    return;
                 }
 
                 try
