@@ -196,28 +196,34 @@ namespace CryptoModule2.ViewModels
                 try
                 {
                     OpenFileDialog openFileDialog = new OpenFileDialog();
+                    SaveFileDialog saveFileDialog = new SaveFileDialog();
+
                     if( openFileDialog.ShowDialog() == true )
                     {
                         string inputPath = openFileDialog.FileName;
-                        string outputPath = openFileDialog.FileName.Replace( ".enc", "" );
-
-                        RSAKey key = GetPrivateKey();
-
-                        IsDoingCipher = true;
-                        Thread thread = new Thread( () =>
+                        if( saveFileDialog.ShowDialog() == true )
                         {
-                            _rsa.Decrypt( inputPath, outputPath, key, percent =>
+                            string outputPath = saveFileDialog.FileName;
+
+                            RSAKey key = GetPrivateKey();
+
+                            IsDoingCipher = true;
+                            Thread thread = new Thread( () =>
                             {
-                                CurrentProgress = percent;
+                                _rsa.Decrypt( inputPath, outputPath, key, percent =>
+                                {
+                                    CurrentProgress = percent;
+                                } );
+                                CurrentProgress = 100f;
+
+                                MessageBox.Show( "Файл успешно расшифрован" );
+                                IsDoingCipher = false;
+                                CurrentProgress = 0f;
+
                             } );
-                            CurrentProgress = 100f;
-
-                            MessageBox.Show( "Файл успешно расшифрован" );
-                            IsDoingCipher = false;
-                            CurrentProgress = 0f;
-
-                        } );
-                        thread.Start();
+                            thread.Start();
+                        }
+                        
                     }
                 }
                 catch( Exception ex )
