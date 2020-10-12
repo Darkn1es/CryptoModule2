@@ -90,20 +90,27 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Models\BigIntegerExtension.cs" />
+    <Compile Include="Models\Ciphers\Asymmetric\Shamir.cs" />
     <Compile Include="Models\Ciphers\IFileCipher.cs" />
     <Compile Include="Models\Ciphers\Keys\AsymmetricCipherKeyPair.cs" />
     <Compile Include="Models\Ciphers\Keys\DHKey.cs" />
-    <Compile Include="Models\Ciphers\Keys\DHParameters.cs" />
+    <Compile Include="Models\Ciphers\Keys\ShamirKey.cs" />
+    <Compile Include="Models\Ciphers\Parameters\DHParameters.cs" />
+    <Compile Include="Models\Ciphers\Parameters\ShamirParameters.cs" />
     <Compile Include="Models\Helper.cs" />
     <Compile Include="ViewModels\DHelmanVM.cs" />
     <Compile Include="ViewModels\ICipherVM.cs" />
     <Compile Include="ViewModels\RSApageVM.cs" />
+    <Compile Include="ViewModels\ShamirVM.cs" />
     <Compile Include="Views\Converters\InverseBooleanConverter.cs" />
     <Compile Include="Views\Pages\DHPage.xaml.cs">
       <DependentUpon>DHPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\RSAPage.xaml.cs">
       <DependentUpon>RSAPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\ShamirPage.xaml.cs">
+      <DependentUpon>ShamirPage.xaml</DependentUpon>
     </Compile>
     <Page Include="Views\MainView.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -123,6 +130,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Pages\RSAPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\ShamirPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

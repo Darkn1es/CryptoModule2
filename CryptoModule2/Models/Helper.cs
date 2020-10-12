@@ -47,7 +47,31 @@ namespace CryptoModule2.Models
 
         }
 
-        private static (BigInteger d, BigInteger x, BigInteger y) GCDex( BigInteger a, BigInteger b )
+        public static BigInteger GeneratePrime( int decimalNubmerCount )
+        {
+            if( decimalNubmerCount < 6 )
+            {
+                throw new ArgumentException( "Слишком маленький порядок числа" );
+            }
+
+            BigInteger min = BigInteger.Pow( 10, decimalNubmerCount );
+            BigInteger max = BigInteger.Pow( 10, decimalNubmerCount + 1 );
+
+            BigInteger p;
+
+            while( true ) // Надо ограничть макс значением
+            {
+                p = Helper.GenerateBigInteger( min, max );
+                if( p.IsPrime() )
+                {
+                    break;
+                }
+            }
+
+            return p;
+        }
+
+        public static (BigInteger d, BigInteger x, BigInteger y) GCDex( BigInteger a, BigInteger b )
         {
             BigInteger x = BigInteger.Zero;
             BigInteger y = BigInteger.Zero;
@@ -81,21 +105,6 @@ namespace CryptoModule2.Models
 
         }
 
-        public static BigInteger Inverse( BigInteger a, BigInteger module )
-        {
-            var result = GCDex( a, module );
-            if( result.d != BigInteger.One )
-            {
-                throw new ApplicationException( "Обратный элемент не найден" );
-            }
 
-            BigInteger.DivRem( result.x, module, out result.x );
-            if( result.x.Sign == -1 )
-            {
-                result.x += module;
-                BigInteger.DivRem( result.x, module, out result.x );
-            }
-            return result.x;
-        }
     }
 }

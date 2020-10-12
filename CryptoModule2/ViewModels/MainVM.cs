@@ -27,12 +27,13 @@ namespace CryptoModule2.ViewModels
 
         private Page _rsaPage = new RSAPage();
         private Page _dhPage = new DHPage();
+        private Page _shamirPage = new ShamirPage();
 
 
 
         public MainVM()
         {
-            CurrentPageContent = _rsaPage;
+            CurrentPageContent = _shamirPage;
         }
     }
 

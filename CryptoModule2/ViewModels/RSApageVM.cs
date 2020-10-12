@@ -184,7 +184,7 @@ namespace CryptoModule2.ViewModels
                         thread.Start();
                     }
                 }
-                catch( Exception ex )
+                catch( Exception  )
                 {
                     MessageBox.Show( "Ошибка! Проверьте входные параметры" );
                 }
@@ -226,7 +226,7 @@ namespace CryptoModule2.ViewModels
                         
                     }
                 }
-                catch( Exception ex )
+                catch( Exception )
                 {
                     MessageBox.Show( "Ошибка! Проверьте входные параметры" );
                 }

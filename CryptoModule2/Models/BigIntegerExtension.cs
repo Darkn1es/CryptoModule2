@@ -98,6 +98,25 @@ namespace CryptoModule2.Models
             return true;
         }
 
+        public static BigInteger Inverse( this BigInteger a, BigInteger module )
+        {
+            var result = Helper.GCDex( a, module );
+            if( result.d != BigInteger.One )
+            {
+                throw new ApplicationException( "Обратный элемент не найден" );
+            }
+
+            BigInteger.DivRem( result.x, module, out result.x );
+            if( result.x.Sign == -1 )
+            {
+                result.x += module;
+                BigInteger.DivRem( result.x, module, out result.x );
+            }
+            return result.x;
+        }
+
+
+
 
     }
 

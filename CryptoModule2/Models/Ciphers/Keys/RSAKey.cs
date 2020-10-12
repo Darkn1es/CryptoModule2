@@ -73,7 +73,7 @@ namespace CryptoModule2.Models.Ciphers.Keys
             BigInteger phi = ( p - 1 ) * ( q - 1 );
 
             BigInteger publicExponent = 65537 > phi ? 17 : 65537;
-            BigInteger privateExponent = Helper.Inverse( publicExponent, phi );
+            BigInteger privateExponent = publicExponent.Inverse( phi ); //Helper.Inverse( publicExponent, phi )
 
             IKey publicKey = new RSAKey( false, publicExponent, modulus );
             IKey privateKey = new RSAKey( true, privateExponent, modulus );

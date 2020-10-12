@@ -5,7 +5,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CryptoModule2.Models.Ciphers.Keys
+namespace CryptoModule2.Models.Ciphers.Parameters
 {
     public class DHParameters
     {
