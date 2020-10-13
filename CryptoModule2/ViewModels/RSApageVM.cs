@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -184,7 +185,7 @@ namespace CryptoModule2.ViewModels
                         thread.Start();
                     }
                 }
-                catch( Exception  )
+                catch( Exception )
                 {
                     MessageBox.Show( "Ошибка! Проверьте входные параметры" );
                 }
@@ -223,7 +224,7 @@ namespace CryptoModule2.ViewModels
                             } );
                             thread.Start();
                         }
-                        
+
                     }
                 }
                 catch( Exception )
@@ -263,7 +264,7 @@ namespace CryptoModule2.ViewModels
             {
                 BigInteger p;
                 BigInteger q;
-                if( !BigInteger.TryParse(P, out p) )
+                if( !BigInteger.TryParse( P, out p ) )
                 {
                     MessageBox.Show( "Введите корректное значения P" );
                     return;
@@ -305,9 +306,9 @@ namespace CryptoModule2.ViewModels
                 {
                     RSAKey key = GetPublicKey();
                     byte[] result = _rsa.Encrypt( Encoding.Default.GetBytes( InputText ), key );
-                    OutputText = Encoding.Default.GetString( result );
+                    OutputText = BitConverter.ToString( result ).Replace( "-", string.Empty );
                 }
-                catch( Exception ex)
+                catch( Exception ex )
                 {
 
                     MessageBox.Show( ex.Message );
@@ -322,14 +323,27 @@ namespace CryptoModule2.ViewModels
                     MessageBox.Show( "Введите текст" );
                     return;
                 }
+                Regex regex = new Regex( "^[0-9A-F]{1,}$", RegexOptions.IgnoreCase );
+                if( !regex.IsMatch( InputText ) || ( InputText.Length % 2 == 1 ) )
+                {
+                    MessageBox.Show( "Неверная строка HEX" );
+                    return;
+                }
 
                 try
                 {
+
                     RSAKey key = GetPrivateKey();
-                    byte[] result = _rsa.Decrypt( Encoding.Default.GetBytes( InputText ), key );
+
+                    byte[] input = Enumerable.Range( 0, InputText.Length )
+                     .Where( x => x % 2 == 0 )
+                     .Select( x => Convert.ToByte( InputText.Substring( x, 2 ), 16 ) )
+                     .ToArray();
+
+                    byte[] result = _rsa.Decrypt( input, key );
                     OutputText = Encoding.Default.GetString( result );
                 }
-                catch( Exception ex)
+                catch( Exception ex )
                 {
 
                     MessageBox.Show( ex.Message );

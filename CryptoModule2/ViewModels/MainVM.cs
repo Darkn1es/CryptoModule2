@@ -33,7 +33,7 @@ namespace CryptoModule2.ViewModels
 
         public MainVM()
         {
-            CurrentPageContent = _shamirPage;
+            CurrentPageContent = _rsaPage;
         }
     }
 
