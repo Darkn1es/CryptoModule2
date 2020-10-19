@@ -51,6 +51,9 @@ namespace CryptoModule2.Models.Ciphers.Asymmetric
 
                 ProgressChanged?.Invoke( percent );
             }
+
+            instream.Close();
+            outstream.Close();
         }
 
         public byte[] Encrypt( byte[] text, IKey key = null )
@@ -91,6 +94,9 @@ namespace CryptoModule2.Models.Ciphers.Asymmetric
                 int percent = (int)((instream.Position * 100f) / fileSize);
                 ProgressChanged?.Invoke( percent );
             }
+
+            instream.Close();
+            outstream.Close();
         }
 
         private byte[] ProcessRSA( byte[] inputBlock, RSAKey rsaKey)

@@ -13,14 +13,14 @@
     <Page.DataContext>
         <viewmodels:RSApageVM/>
     </Page.DataContext>
-     
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
 
-                <RowDefinition Height="100"/>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
 
-            </Grid.RowDefinitions>
+            <RowDefinition Height="100"/>
+
+        </Grid.RowDefinitions>
 
 
 
@@ -91,7 +91,7 @@
                 </Style>
             </Grid.Resources>
             <StackPanel VerticalAlignment="Center">
-                
+
                 <Grid>
                     <TextBlock Text="Введите P" HorizontalAlignment="Center"/>
                     <TextBox/>
@@ -116,10 +116,10 @@
 
             </StackPanel>
 
- 
+
         </Grid>
-        
-        
+
+
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -158,7 +158,7 @@
             <Grid Grid.Column="1">
                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                     <StackPanel.Resources>
-                        
+
                         <Style TargetType="Button">
                             <Setter Property="HorizontalAlignment" Value="Center"/>
                             <Setter Property="VerticalAlignment" Value="Center"/>
@@ -174,7 +174,7 @@
                         <Style TargetType="TextBlock">
                             <Setter Property="FontSize" Value="14"/>
                         </Style>
-                        
+
                     </StackPanel.Resources>
 
                     <Grid>
@@ -194,12 +194,12 @@
                         <TextBlock Text="Модуль (N)" HorizontalAlignment="Center"/>
                         <TextBox Text="{Binding Modulus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     </Grid>
-                    
+
                     <Grid>
                         <TextBlock Text="Открытая экспонента" HorizontalAlignment="Center"/>
                         <TextBox Text="{Binding PublicExponent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     </Grid>
-                    
+
                     <Grid>
                         <TextBlock Text="Закрытая экспонента" HorizontalAlignment="Center"/>
                         <TextBox Text="{Binding PrivateExponent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
@@ -267,6 +267,6 @@
                 </Grid>
             </Grid>
         </Grid>
-        </Grid>
+    </Grid>
 
 </Page>

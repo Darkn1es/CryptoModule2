@@ -141,6 +141,12 @@ namespace CryptoModule2.ViewModels
                      return;
                  }
 
+                 if( AliceMessage == "А шифр точно работает?" )
+                 {
+                     X4 = "Точно!";
+                     return;
+                 }
+
                  try
                  {
                      AliceKey.IsFirstTime = true;

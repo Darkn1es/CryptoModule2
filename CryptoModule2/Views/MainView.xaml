@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:CryptoModule2" 
         xmlns:viewmodels="clr-namespace:CryptoModule2.ViewModels"
         mc:Ignorable="d"
-        Title="Криптография" Height="600" Width="1150" MinHeight="600" MinWidth="850">
+        Title="Криптография" Height="650" Width="1150" MinHeight="650" MinWidth="1150">
     <Window.DataContext>
         <viewmodels:MainVM/>
     </Window.DataContext>

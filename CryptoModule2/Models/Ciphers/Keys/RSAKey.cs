@@ -26,14 +26,6 @@ namespace CryptoModule2.Models.Ciphers.Keys
         {
             IsPrivate = isPrivate;
 
-            if( exponent == null )
-            {
-                throw new ArgumentNullException( "Exponent is null" );
-            }
-            if( modulus == null )
-            {
-                throw new ArgumentNullException( "Modulus is null" );
-            }
 
             if( exponent <= BigInteger.One )
             {
