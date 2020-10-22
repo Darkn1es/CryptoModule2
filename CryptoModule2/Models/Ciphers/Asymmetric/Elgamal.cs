@@ -218,7 +218,7 @@ namespace CryptoModule2.Models.Ciphers.Asymmetric
                     ProgressChanged?.Invoke( percent );
                 }
             }
-            catch( Exception )
+            catch( Exception ex)
             {
 
                 throw new Exception( "Ошибка! Проверьте входные параметры.", ex );
