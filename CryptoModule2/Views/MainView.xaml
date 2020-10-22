@@ -45,12 +45,12 @@
             </Grid.RowDefinitions>
             
             <Grid Grid.Row="0">
-                <Button x:Name="OpenMenuButton" Content="{Binding ChosenChipher}"/>
+                <Button x:Name="OpenMenuButton" Content="{Binding CurrentCipher.CipherName}"/>
             </Grid>
 
             <Grid x:Name="centerGrid"  Grid.Row="1">
 
-                <Frame Content="{Binding Path=CurrentPageContent}" NavigationUIVisibility="Hidden"/>
+                <Frame Content="{ Binding CurrentCipher.CipherPage }" NavigationUIVisibility="Hidden"/>
 
             </Grid>
         </Grid>
@@ -66,7 +66,7 @@
 
             <Grid Grid.Row="0">
                 <Button x:Name="CloseMenuButton" Content="{Binding ChosenChipher, NotifyOnSourceUpdated=True}"/>
-                <TextBlock Text="{Binding ChosenChipher, NotifyOnTargetUpdated=True, UpdateSourceTrigger=PropertyChanged}" Visibility="Hidden">
+                <TextBlock Text="{Binding CurrentCipher.CipherName, NotifyOnTargetUpdated=True, UpdateSourceTrigger=PropertyChanged}" Visibility="Hidden">
                     <TextBlock.Triggers>
                         <EventTrigger RoutedEvent="Binding.TargetUpdated">
                             <BeginStoryboard Storyboard="{StaticResource MenuClose}"/>
@@ -74,7 +74,27 @@
                     </TextBlock.Triggers>
                 </TextBlock>
             </Grid>
-            <Frame Grid.Row="1" Content="{Binding Path=CurrentMenuPageContent}" NavigationUIVisibility="Hidden" Height="{Binding ElementName=centerGrid, Path=ActualHeight}"/>
+
+            <ItemsControl ItemsSource="{Binding Ciphers, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
+                          Grid.Row="1" 
+                          Height="{Binding ElementName=centerGrid, Path=ActualHeight}"
+                          x:Name="ItemControlMenu">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="3" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Content="{Binding Path=CipherName}" 
+                                Height="30"
+                                Width="200"
+                                Margin="10"
+                                Command="{Binding ElementName=ItemControlMenu, Path=DataContext.ChangeCipher}"
+                                CommandParameter="{Binding}"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </Grid>
     </Grid>
 </Window>

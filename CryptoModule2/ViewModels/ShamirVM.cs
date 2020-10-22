@@ -1,6 +1,7 @@
 ﻿using CryptoModule2.Models.Ciphers.Asymmetric;
 using CryptoModule2.Models.Ciphers.Keys;
 using CryptoModule2.Models.Ciphers.Parameters;
+using CryptoModule2.ViewModels.Interfaces;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
@@ -12,7 +13,7 @@ using System.Windows;
 
 namespace CryptoModule2.ViewModels
 {
-    public class ShamirVM : BindableBase
+    public class ShamirVM : BindableBase, ICipherVM
     {
         private ShamirParameters _parameters;
         public ShamirParameters Parameters
@@ -141,12 +142,6 @@ namespace CryptoModule2.ViewModels
                      return;
                  }
 
-                 if( AliceMessage == "А шифр точно работает?" )
-                 {
-                     X4 = "Точно!";
-                     return;
-                 }
-
                  try
                  {
                      AliceKey.IsFirstTime = true;
@@ -193,6 +188,9 @@ namespace CryptoModule2.ViewModels
             X4 = "";
         }
 
-
+        public void ClearForm()
+        {
+            ClearOutput();
+        }
     }
 }

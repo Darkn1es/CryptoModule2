@@ -1,5 +1,7 @@
-﻿using CryptoModule2.Models.Ciphers.Keys;
+﻿using CryptoModule2.Models.Ciphers;
+using CryptoModule2.Models.Ciphers.Keys;
 using CryptoModule2.Models.Ciphers.Parameters;
+using CryptoModule2.ViewModels.Interfaces;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
@@ -12,7 +14,7 @@ using System.Windows;
 
 namespace CryptoModule2.ViewModels
 {
-    public class DHelmanVM : BindableBase
+    public class DHelmanVM : BindableBase, ICipherVM
     {
 
         public DHParameters PublicParameters { get; set; } = DHParameters.Generate( 30 );
@@ -82,25 +84,20 @@ namespace CryptoModule2.ViewModels
         public DelegateCommand<bool?> GeneratePublicKey { get; }
         public DelegateCommand<bool?> GenerateKey { get; }
 
-
-
         public DHelmanVM()
         {
 
             GeneratePublicParameters = new DelegateCommand( () =>
             {
-                PublicParameters = DHParameters.Generate( 30 );
-                RaisePropertyChanged( nameof(PublicParameters) );
-                AlicePublicKey = "";
-                AlicePrivateKey = "";
-                BobPrivateKey = "";
-                BobPublicKey = "";
+                Random rand = new Random();
+                PublicParameters = DHParameters.Generate( rand.Next( 7, 30 ) );
+                ClearForm();
             } );
 
             GenerateKey = new DelegateCommand<bool?>( isAlice =>
             {
                 var keyPair = new DHKey( PublicParameters );
-                if( isAlice == true)
+                if( isAlice == true )
                 {
                     AlicePrivateKey = keyPair.X.ToString();
                     AlicePublicKey = keyPair.Y.ToString();
@@ -119,7 +116,7 @@ namespace CryptoModule2.ViewModels
                     string privateKey = isAlice == true ? AlicePrivateKey : BobPrivateKey;
 
                     BigInteger x;
-                    if( !BigInteger.TryParse(privateKey, out x) )
+                    if( !BigInteger.TryParse( privateKey, out x ) )
                     {
                         throw new Exception( "Ошибка в приватном ключе" );
                     }
@@ -137,7 +134,7 @@ namespace CryptoModule2.ViewModels
                     }
 
                 }
-                catch( Exception ex)
+                catch( Exception ex )
                 {
                     MessageBox.Show( ex.Message );
                 }
@@ -145,7 +142,7 @@ namespace CryptoModule2.ViewModels
 
             CalcKey = new DelegateCommand( () =>
             {
-                if( string.IsNullOrEmpty(AlicePublicKey) )
+                if( string.IsNullOrEmpty( AlicePublicKey ) )
                 {
                     MessageBox.Show( "Посчитайте публичный ключ Алисы" );
                     return;
@@ -170,12 +167,21 @@ namespace CryptoModule2.ViewModels
                     RaisePropertyChanged( nameof( Key ) );
 
                 }
-                catch( Exception ex)
+                catch( Exception ex )
                 {
                     MessageBox.Show( ex.Message );
                 }
             } );
 
+        }
+
+        public void ClearForm()
+        {
+            RaisePropertyChanged( nameof( PublicParameters ) );
+            AlicePublicKey = "";
+            AlicePrivateKey = "";
+            BobPrivateKey = "";
+            BobPublicKey = "";
         }
     }
 }

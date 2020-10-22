@@ -12,7 +12,7 @@ namespace CryptoModule2.Models.Ciphers.Asymmetric
 {
     public class Elgamal : ICipher, IFileCipher
     {
-        public string CipherName => "Эль-Гамал";
+        public string CipherName => "Эль-Гамаль";
 
         public byte[] Decrypt( byte[] ciphertext, IKey key = null )
         {
@@ -52,11 +52,11 @@ namespace CryptoModule2.Models.Ciphers.Asymmetric
                     result.AddRange( packedBlock );
                 }
 
-        }
-            catch(Exception ex )
+            }
+            catch( Exception ex )
             {
                 throw new Exception( "Ошибка! Проверьте входные параметры.", ex );
-    }
+            }
 
             return result.ToArray();
         }
@@ -75,35 +75,44 @@ namespace CryptoModule2.Models.Ciphers.Asymmetric
                 throw new ArgumentException( "Для расшифровывания нужен закрытый ключ" );
             }
 
-            using FileStream instream = File.OpenRead( inputPath );
-            using FileStream outstream = File.Open( outputPath, FileMode.Create );
-
-            long fileSize = instream.Length;
-
-            int readSize = elgamalKey.MaxCipherTextSize * 1024 + elgamalKey.MaxCipherTextSize;
-
-            byte[] inputChunk = new byte[ readSize ];
-            int size = 0;
-
-            while( ( size = instream.Read( inputChunk, 0, readSize ) ) != 0 )
+            try
             {
+                using FileStream instream = File.OpenRead( inputPath );
+                using FileStream outstream = File.Open( outputPath, FileMode.Create );
 
-                byte[] currentBlock;
-                if( size == readSize )
-                {
-                    currentBlock = inputChunk;
-                }
-                else
-                {
-                    currentBlock = new byte[ size ];
-                    Buffer.BlockCopy( inputChunk, 0, currentBlock, 0, size );
-                }
-                byte[] outputChunk = Decrypt( currentBlock, elgamalKey );
-                outstream.Write( outputChunk, 0, outputChunk.Length );
+                long fileSize = instream.Length;
 
-                int percent = ( int )( ( instream.Position * 100f ) / fileSize );
-                ProgressChanged?.Invoke( percent );
+                int readSize = elgamalKey.MaxCipherTextSize * 1024 + elgamalKey.MaxCipherTextSize;
+
+                byte[] inputChunk = new byte[ readSize ];
+                int size = 0;
+
+                while( ( size = instream.Read( inputChunk, 0, readSize ) ) != 0 )
+                {
+
+                    byte[] currentBlock;
+                    if( size == readSize )
+                    {
+                        currentBlock = inputChunk;
+                    }
+                    else
+                    {
+                        currentBlock = new byte[ size ];
+                        Buffer.BlockCopy( inputChunk, 0, currentBlock, 0, size );
+                    }
+                    byte[] outputChunk = Decrypt( currentBlock, elgamalKey );
+                    outstream.Write( outputChunk, 0, outputChunk.Length );
+
+                    int percent = ( int )( ( instream.Position * 100f ) / fileSize );
+                    ProgressChanged?.Invoke( percent );
+                }
             }
+            catch( Exception ex )
+            {
+                throw new Exception( "Ошибка! Проверьте входные параметры.", ex );
+            }
+
+
         }
 
         public byte[] Encrypt( byte[] text, IKey key = null )
@@ -125,7 +134,7 @@ namespace CryptoModule2.Models.Ciphers.Asymmetric
                 int writeSize = elgamalKey.MaxCipherTextSize;
 
                 BigInteger k = Helper.GenerateBigInteger( 2, elgamalKey.Parameters.P - 3 );
-                
+
                 BigInteger r = BigInteger.ModPow( elgamalKey.Parameters.G, k, elgamalKey.Parameters.P );
 
                 byte[] packedBlock = new byte[ writeSize ];
@@ -175,34 +184,44 @@ namespace CryptoModule2.Models.Ciphers.Asymmetric
                 throw new ArgumentException( "Для шифрования нужен публичный ключ" );
             }
 
-            using FileStream instream = File.OpenRead( inputPath );
-            using FileStream outstream = File.Open( outputPath, FileMode.Create );
-
-            long fileSize = instream.Length;
-
-            int readSize = elgamalKey.MaxOpenTextSize * 1024;
-
-            byte[] inputChunk = new byte[ readSize ];
-            int size = 0;
-
-            while( (size = instream.Read( inputChunk, 0, readSize ) ) != 0 )
+            try
             {
 
-                byte[] currentBlock;
-                if( size == readSize )
-                {
-                    currentBlock = inputChunk;
-                }
-                else
-                {
-                    currentBlock = new byte[ size ];
-                    Buffer.BlockCopy( inputChunk, 0, currentBlock, 0, size );
-                }
-                byte[] outputChunk = Encrypt( currentBlock, elgamalKey );
-                outstream.Write( outputChunk, 0, outputChunk.Length );
 
-                int percent = ( int )( ( instream.Position * 100f ) / fileSize );
-                ProgressChanged?.Invoke( percent );
+                using FileStream instream = File.OpenRead( inputPath );
+                using FileStream outstream = File.Open( outputPath, FileMode.Create );
+
+                long fileSize = instream.Length;
+
+                int readSize = elgamalKey.MaxOpenTextSize * 1024;
+
+                byte[] inputChunk = new byte[ readSize ];
+                int size = 0;
+
+                while( ( size = instream.Read( inputChunk, 0, readSize ) ) != 0 )
+                {
+
+                    byte[] currentBlock;
+                    if( size == readSize )
+                    {
+                        currentBlock = inputChunk;
+                    }
+                    else
+                    {
+                        currentBlock = new byte[ size ];
+                        Buffer.BlockCopy( inputChunk, 0, currentBlock, 0, size );
+                    }
+                    byte[] outputChunk = Encrypt( currentBlock, elgamalKey );
+                    outstream.Write( outputChunk, 0, outputChunk.Length );
+
+                    int percent = ( int )( ( instream.Position * 100f ) / fileSize );
+                    ProgressChanged?.Invoke( percent );
+                }
+            }
+            catch( Exception )
+            {
+
+                throw new Exception( "Ошибка! Проверьте входные параметры.", ex );
             }
         }
 

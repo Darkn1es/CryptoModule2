@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CryptoModule2.ViewModels
+namespace CryptoModule2.ViewModels.Interfaces
 {
-    interface ICipherVM
+    public interface ICipherVM
     {
-        void ClearForm();
+        public void ClearForm();
     }
 }

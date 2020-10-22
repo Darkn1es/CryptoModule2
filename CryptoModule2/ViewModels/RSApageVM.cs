@@ -1,6 +1,7 @@
 ﻿using CryptoModule2.Models.Ciphers;
 using CryptoModule2.Models.Ciphers.Asymmetric;
 using CryptoModule2.Models.Ciphers.Keys;
+using CryptoModule2.ViewModels.Interfaces;
 using Microsoft.Win32;
 using Prism.Commands;
 using Prism.Mvvm;

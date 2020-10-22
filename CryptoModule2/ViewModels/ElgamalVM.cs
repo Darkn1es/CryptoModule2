@@ -2,6 +2,7 @@
 using CryptoModule2.Models.Ciphers.Asymmetric;
 using CryptoModule2.Models.Ciphers.Keys;
 using CryptoModule2.Models.Ciphers.Parameters;
+using CryptoModule2.ViewModels.Interfaces;
 using Microsoft.Win32;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -16,7 +17,7 @@ using System.Windows;
 
 namespace CryptoModule2.ViewModels
 {
-    public class ElgamalVM : BindableBase
+    public class ElgamalVM : BindableBase, ICipherVM
     {
         #region fields
         private ElgamalParameters _parameters;
@@ -43,7 +44,7 @@ namespace CryptoModule2.ViewModels
             {
                 _parameters = value;
                 RaisePropertyChanged( nameof( Parameters ) );
-                ClearTexts();
+                ClearForm();
             }
         }
 
@@ -54,7 +55,7 @@ namespace CryptoModule2.ViewModels
             {
                 _aliceKey = value;
                 RaisePropertyChanged( nameof( AliceKey ) );
-                ClearTexts();
+                ClearForm();
             }
         }
 
@@ -65,7 +66,7 @@ namespace CryptoModule2.ViewModels
             {
                 _bobKey = value;
                 RaisePropertyChanged( nameof( BobKey ) );
-                ClearTexts();
+                ClearForm();
             }
 
         }
@@ -280,11 +281,13 @@ namespace CryptoModule2.ViewModels
             BobKey = ElgamalKey.GenerateKeyPair( Parameters );
         }
 
-        private void ClearTexts()
+        public void ClearForm()
         {
             AliceText = "";
             BobText = "";
             CipherText = "";
         }
+
+
     }
 }

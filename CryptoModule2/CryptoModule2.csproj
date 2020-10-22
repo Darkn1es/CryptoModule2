@@ -101,9 +101,10 @@
     <Compile Include="Models\Ciphers\Parameters\ElgamalParameters.cs" />
     <Compile Include="Models\Ciphers\Parameters\ShamirParameters.cs" />
     <Compile Include="Models\Helper.cs" />
+    <Compile Include="ViewModels\CipherForm.cs" />
     <Compile Include="ViewModels\DHelmanVM.cs" />
     <Compile Include="ViewModels\ElgamalVM.cs" />
-    <Compile Include="ViewModels\ICipherVM.cs" />
+    <Compile Include="ViewModels\Interfaces\ICipherVM.cs" />
     <Compile Include="ViewModels\RSApageVM.cs" />
     <Compile Include="ViewModels\ShamirVM.cs" />
     <Compile Include="Views\Converters\InverseBooleanConverter.cs" />

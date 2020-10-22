@@ -1,4 +1,5 @@
 ﻿using CryptoModule2.Views.Pages;
+using Prism.Commands;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
@@ -25,16 +26,36 @@ namespace CryptoModule2.ViewModels
             }
         }
 
-        private Page _rsaPage = new RSAPage();
-        private Page _dhPage = new DHPage();
-        private Page _shamirPage = new ShamirPage();
-        private Page _elgamalPage = new ElgamalPage();
+        private CipherForm _currentCipher;
+        public CipherForm CurrentCipher
+        {
+            get => _currentCipher;
+            set
+            {
+                _currentCipher = value;
+                _currentCipher.ClearForm();
+                RaisePropertyChanged( nameof( CurrentCipher ) );
+            }
+        }
 
+        public List<CipherForm> Ciphers { get; }
 
+        public DelegateCommand<CipherForm> ChangeCipher { get; }
 
         public MainVM()
         {
-            CurrentPageContent = _elgamalPage;
+            Ciphers = new List<CipherForm>();
+            Ciphers.Add( new CipherForm( new RSAPage(), "RSA" ) );
+            Ciphers.Add( new CipherForm( new DHPage(), "Диффи—Хеллман" ) );
+            Ciphers.Add( new CipherForm( new ShamirPage(), "Шамир" ) );
+            Ciphers.Add( new CipherForm( new ElgamalPage(), "Эль-Гамаль" ) );
+            RaisePropertyChanged( nameof( Ciphers ) );
+
+            CurrentCipher = Ciphers[ 0 ];
+            ChangeCipher = new DelegateCommand<CipherForm>( cipher =>
+            {
+                CurrentCipher = cipher;
+            } );
         }
     }
 
