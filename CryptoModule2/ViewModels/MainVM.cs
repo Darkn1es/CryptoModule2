@@ -1,4 +1,5 @@
-﻿using CryptoModule2.Views.Pages;
+﻿using CryptoModule2.Models.HashFunctions;
+using CryptoModule2.Views.Pages;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
@@ -45,10 +46,15 @@ namespace CryptoModule2.ViewModels
         public MainVM()
         {
             Ciphers = new List<CipherForm>();
+
             Ciphers.Add( new CipherForm( new RSAPage(), "RSA" ) );
             Ciphers.Add( new CipherForm( new DHPage(), "Диффи—Хеллман" ) );
             Ciphers.Add( new CipherForm( new ShamirPage(), "Шамир" ) );
             Ciphers.Add( new CipherForm( new ElgamalPage(), "Эль-Гамаль" ) );
+            Ciphers.Add( new CipherForm( new HashPage( new MD5() ), "MD5" ) );
+            Ciphers.Add( new CipherForm( new HashPage( new SHA1() ), "SHA1" ) );
+            Ciphers.Add( new CipherForm( new HashPage( new Streebog() ), "ГОСТ2012" ) );
+
             RaisePropertyChanged( nameof( Ciphers ) );
 
             CurrentCipher = Ciphers[ 0 ];
@@ -56,6 +62,10 @@ namespace CryptoModule2.ViewModels
             {
                 CurrentCipher = cipher;
             } );
+
+
+
+
         }
     }
 

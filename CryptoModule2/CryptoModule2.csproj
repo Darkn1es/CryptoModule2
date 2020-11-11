@@ -100,10 +100,15 @@
     <Compile Include="Models\Ciphers\Parameters\DHParameters.cs" />
     <Compile Include="Models\Ciphers\Parameters\ElgamalParameters.cs" />
     <Compile Include="Models\Ciphers\Parameters\ShamirParameters.cs" />
+    <Compile Include="Models\HashFunctions\IHash.cs" />
+    <Compile Include="Models\HashFunctions\MD5.cs" />
+    <Compile Include="Models\HashFunctions\SHA1.cs" />
+    <Compile Include="Models\HashFunctions\Streebog.cs" />
     <Compile Include="Models\Helper.cs" />
     <Compile Include="ViewModels\CipherForm.cs" />
     <Compile Include="ViewModels\DHelmanVM.cs" />
     <Compile Include="ViewModels\ElgamalVM.cs" />
+    <Compile Include="ViewModels\HashVM.cs" />
     <Compile Include="ViewModels\Interfaces\ICipherVM.cs" />
     <Compile Include="ViewModels\RSApageVM.cs" />
     <Compile Include="ViewModels\ShamirVM.cs" />
@@ -113,6 +118,9 @@
     </Compile>
     <Compile Include="Views\Pages\ElgamalPage.xaml.cs">
       <DependentUpon>ElgamalPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\HashPage.xaml.cs">
+      <DependentUpon>HashPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Pages\RSAPage.xaml.cs">
       <DependentUpon>RSAPage.xaml</DependentUpon>
@@ -138,6 +146,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Pages\ElgamalPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\HashPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
