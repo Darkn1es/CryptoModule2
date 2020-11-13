@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,7 +38,36 @@ namespace CryptoModule2.Models.HashFunctions
 
         public byte[] Hash( string path )
         {
-            throw new NotImplementedException();
+            byte[] h, n, sigma;
+            Init( out h, out n, out sigma );
+
+            using FileStream instream = File.OpenRead( path );
+            long fileSize = instream.Length;
+            long len = instream.Length;
+
+
+            byte[] block = new byte[ 64 ];
+
+            long offset = 0;
+            while( len >= 64 )
+            {
+                offset++;
+                instream.Seek( fileSize - offset * 64, SeekOrigin.Begin );
+                instream.Read( block, 0, 64 );
+                ProcessBlock( block, ref n, ref h, ref sigma );
+                len -= 64;
+            }
+
+            int byteLeft = (int)len;
+            block = new byte[ 64 ];
+            block[ 63 - byteLeft ] = 1;
+            if( byteLeft != 0 )
+            {
+                instream.Seek( 0, SeekOrigin.Begin );
+                instream.Read( block, 64 - byteLeft, byteLeft );
+            }
+
+            return ProcessFinalBlock( block, ref n, ref h, ref sigma, ( ulong )( byteLeft * 8 ) );
         }
 
         private void Init( out byte[] h, out byte[] n, out byte[] sigma )

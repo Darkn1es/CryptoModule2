@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -39,6 +40,17 @@ namespace CryptoModule2.ViewModels
             }
         }
 
+        private bool _isCalc = false;
+        public bool IsCalc
+        {
+            get => _isCalc;
+            set
+            {
+                _isCalc = value;
+                RaisePropertyChanged( nameof( IsCalc ) );
+            }
+        }
+
         public DelegateCommand HashTextCommand { get; }
         public DelegateCommand HashFileCommand { get; }
 
@@ -58,8 +70,14 @@ namespace CryptoModule2.ViewModels
                 OpenFileDialog openFileDialog = new OpenFileDialog();
                 if( openFileDialog.ShowDialog() == true )
                 {
-                    byte[] digest = _hash.Hash( openFileDialog.FileName );
-                    OutputText = BitConverter.ToString( digest ).Replace( "-", string.Empty );
+                    IsCalc = true;
+                    Thread thread = new Thread( () =>
+                    {
+                        byte[] digest = _hash.Hash( openFileDialog.FileName );
+                        OutputText = BitConverter.ToString( digest ).Replace( "-", string.Empty );
+                        IsCalc = false;
+                    } );
+                    thread.Start();
                 }
 
             } );

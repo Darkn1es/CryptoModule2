@@ -3,20 +3,27 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:CryptoModule2.Views.Pages"
+      xmlns:local="clr-namespace:CryptoModule2.Views.Pages" xmlns:fa="http://schemas.fontawesome.io/icons/" xmlns:convert="clr-namespace:CryptoModule2.Views.Converters"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="HashPage">
-
+    
+    <Page.Resources>
+        <convert:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    </Page.Resources>
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
 
-        <Grid Grid.Column="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="200"/>
+
+        </Grid.RowDefinitions>
+        
+        <Grid Grid.Row="0">
             <TextBox TextWrapping="Wrap" AcceptsReturn="True" AcceptsTab="True" Text="{Binding InputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                          Margin="10,15"  MaxLength="10000">
+                          Margin="10,15"  MaxLength="10000"
+                     IsEnabled="{Binding IsCalc, Converter={StaticResource InverseBooleanConverter}}">
                 <TextBox.Style>
                     <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
                         <Style.Resources>
@@ -42,8 +49,15 @@
 
             </TextBox>
         </Grid>
+        <fa:ImageAwesome Icon="Spinner" Spin="{Binding IsCalc}" 
+                         SpinDuration="4" 
+                         Grid.Row="0" 
+                         Foreground="Gray"  
+                         Width="100"
+                         Visibility="{Binding IsCalc, Converter={StaticResource BoolToVis}}"/>
 
-        <Grid Grid.Column="1">
+
+        <Grid Grid.Row="1">
             <StackPanel HorizontalAlignment="Center"
                         VerticalAlignment="Center">
                 <StackPanel.Resources>
@@ -54,6 +68,8 @@
                         <Setter Property="Width" Value="160"/>
                         <Setter Property="Height" Value="30"/>
                         <Setter Property="Margin" Value="10"/>
+                        <Setter Property="IsEnabled" Value="{Binding IsCalc, Converter={StaticResource InverseBooleanConverter}}"/>
+
                     </Style>
                     <Style TargetType="TextBox">
                         <Setter Property="FontSize" Value="14"/>
@@ -66,13 +82,17 @@
                     </Style>
 
                 </StackPanel.Resources>
-                <Button Content="Получить хэш из текста"
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Content="Получить хэш из текста"
                         Command="{Binding HashTextCommand}"/>
-                <Button Content="Получить хэш из файла"
+                    <Button Content="Получить хэш из файла"
                          Command="{Binding HashFileCommand}"/>
+                </StackPanel>
+
                 <TextBlock Text="Результат" />
                 <TextBox Text="{Binding OutputText}" 
-                         IsReadOnly="True"/>
+                         IsReadOnly="True"
+                         Width="600"/>
             </StackPanel>
         </Grid>
 
